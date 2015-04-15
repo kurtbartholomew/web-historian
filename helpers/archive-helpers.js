@@ -26,21 +26,31 @@ exports.initialize = function(pathsObj){
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(){
-
+  fs.readFile(exports.paths.list, function(err,contents){
+    if( err ) { return err; }
+    return contents;
+  });
 };
 
-exports.isUrlInList = function(){
-
+exports.isUrlInList = function(url){
+  fs.readFile(exports.paths.list, function(err,contents){
+    if( err ) { return err; }
+    return contents.toString().indexOf() > -1;
+  });
 };
 
-exports.addUrlToList = function(){
-
+exports.addUrlToList = function(url){
+  fs.appendFile(exports.paths.list, url, function(err){
+    if(err) { return err; }
+  });
 };
 
-exports.isURLArchived = function(){
-
+exports.isURLArchived = function(url){
+  fs.exists(exports.paths.archivedSites + "/" + url, function(existence) {
+    return existence;
+  });
 };
 
 exports.downloadUrls = function(){
-  
+
 };

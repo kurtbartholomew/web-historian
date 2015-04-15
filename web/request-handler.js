@@ -5,6 +5,13 @@ var helpers = require('./http-helpers');
 
 exports.handleRequest = function (req, res) {
 
+  if(req.method === 'POST') {
+
+    helpers.serveAssets(res,path.basename(req.url),function(res,contents){
+      res.end(contents);
+    });
+  }
+
   console.log("Attempting to " + req.method + " to " + req.url);
   helpers.serveAssets(res,path.basename(req.url),function(res,contents){
     res.end(contents);
