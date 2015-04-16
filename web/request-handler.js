@@ -5,17 +5,24 @@ var helpers = require('./http-helpers');
 
 exports.handleRequest = function (req, res) {
 
-  if(req.method === 'POST') {
+  // if(req.method === 'POST') {
 
-    helpers.serveAssets(res,path.basename(req.url),function(res,contents){
+  //   helpers.serveAssets(res,path.basename(req.url),function(res,contents){
+  //     res.end(contents);
+  //   });
+  // }
+  if(req.method === 'GET'){
+    console.log("Attempting to " + req.method + " to " + req.url);
+    helpers.serveAssets(res,req.url,function(res,contents){
       res.end(contents);
     });
+  } else if (req.method === 'POST'){
+    helpers.collectData(req, function(data){
+      //console.log(data);
+      archive.addUrlToList(data.url.toString());
+    })
   }
 
-  console.log("Attempting to " + req.method + " to " + req.url);
-  helpers.serveAssets(res,path.basename(req.url),function(res,contents){
-    res.end(contents);
-  });
 
   //res.end(archive.paths.list);
 };

@@ -27,13 +27,32 @@ exports.collectData = function(request, callback){
     });
 };
 
+var publicFiles = {
+  '/': 'index.html',
+  '/styles.css': 'styles.css',
+  '/loading.html': 'loading.html'
+}
+
 exports.serveAssets = function(res, asset, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
-  if( asset === '' ) { asset = 'index.html'; }
 
-  var filePath = archive.paths.siteAssets + "/" + asset;
-  console.log("Filepath ",filePath);
+  //console.log("Finding index: ",publicFiles[path.basename(asset)] === 'index.html')
+
+  var filePath = asset;
+
+  if(publicFiles[asset]) {
+    filePath = archive.paths.siteAssets +"/"+ publicFiles[asset];
+  } else {
+      filePath = archive.paths.archivedSites + asset;
+      console.log("stranger danger ", filePath);
+  }
+
+  //console.log("The filepath is: ",filePath);
+  //if( asset === '' ) { asset = 'index.html'; }
+
+  //var filePath = archive.paths.siteAssets + "/" + asset;
+  //console.log("Filepath ",filePath);
   fs.exists(filePath, function(existence){
     if(existence){
       fs.readFile(filePath, function(err, contents){
@@ -43,11 +62,11 @@ exports.serveAssets = function(res, asset, callback) {
         } else {
           res.writeHead(200, headers);
           callback(res,contents);
-        } 
+        }
       });
     } else {
       res.writeHead(404, headers);
       callback(res, "Not Found");
-    }  
+    }
   });
 };
