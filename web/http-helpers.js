@@ -23,7 +23,7 @@ exports.collectData = function(request, callback){
     });
 
     request.on('end',function(){
-      callback(JSON.parse(data));
+      callback(data);
     });
 };
 
@@ -45,7 +45,7 @@ exports.serveAssets = function(res, asset, callback) {
     filePath = archive.paths.siteAssets +"/"+ publicFiles[asset];
   } else {
       filePath = archive.paths.archivedSites + asset;
-      console.log("stranger danger ", filePath);
+      //console.log("stranger danger ", filePath);
   }
 
   //console.log("The filepath is: ",filePath);
