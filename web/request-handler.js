@@ -25,6 +25,8 @@ exports.handleRequest = function (req, res) {
           //console.log("NOT ARCHIVED: ADDING "+ queryParser.parse(data).url +" TO ARCHIVE");
           archive.addUrlToList(queryParser.parse(data).url, function(message,status){
             res.writeHead(status);
+            //downloadSite(function(){});
+            archive.downloadUrls(queryParser.parse(data).url);
             //console.log("ADDED TO LIST: NOW SERVING LOADING.HTML");
             helpers.serveAssets(res,"/loading.html",function(res,contents){
               res.writeHead(302);
