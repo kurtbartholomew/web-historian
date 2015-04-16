@@ -37,8 +37,6 @@ exports.serveAssets = function(res, asset, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
 
-  //console.log("Finding index: ",publicFiles[path.basename(asset)] === 'index.html')
-
   var filePath = asset;
 
   if(publicFiles[asset]) {
@@ -48,11 +46,6 @@ exports.serveAssets = function(res, asset, callback) {
       //console.log("stranger danger ", filePath);
   }
 
-  //console.log("The filepath is: ",filePath);
-  //if( asset === '' ) { asset = 'index.html'; }
-
-  //var filePath = archive.paths.siteAssets + "/" + asset;
-  //console.log("Filepath ",filePath);
   fs.exists(filePath, function(existence){
     if(existence){
       fs.readFile(filePath, function(err, contents){

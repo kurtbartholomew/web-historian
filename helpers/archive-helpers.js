@@ -41,6 +41,7 @@ exports.isUrlInList = function(url, callback){
       callback(err);
     } else {
       callback(contents.toString().indexOf() > -1);
+    }
   });
 };
 

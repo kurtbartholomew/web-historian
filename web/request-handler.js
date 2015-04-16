@@ -12,11 +12,27 @@ exports.handleRequest = function (req, res) {
       res.end(contents);
     });
   } else if (req.method === 'POST'){
+    // NEED TO HANDLE FORM DATA INSTEAD OF URL
     helpers.collectData(req, function(data){
-        archive.addUrlToList(queryParser.parse(data).url, function(message,status){
-          res.writeHead(status);
-          res.end(message);
-        });
+      //console.log("FOUND "+ queryParser.parse(data).url);
+      archive.isURLArchived(queryParser.parse(data).url, function(archiveData){
+        if (archiveData) {
+          //console.log("ARCHIVED: RETRIEVING", req.url);
+          helpers.serveAssets(res,req.url,function(res,contents){
+            res.end(contents);
+          });
+        } else {
+          //console.log("NOT ARCHIVED: ADDING "+ queryParser.parse(data).url +" TO ARCHIVE");
+          archive.addUrlToList(queryParser.parse(data).url, function(message,status){
+            res.writeHead(status);
+            //console.log("ADDED TO LIST: NOW SERVING LOADING.HTML");
+            helpers.serveAssets(res,"/loading.html",function(res,contents){
+              res.writeHead(302);
+              res.end(contents);
+            });
+          });
+        }
+      });
     });
   }
 };
