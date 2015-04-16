@@ -26,7 +26,7 @@ exports.handleRequest = function (req, res) {
           archive.addUrlToList(queryParser.parse(data).url, function(message,status){
             res.writeHead(status);
             //downloadSite(function(){});
-            archive.downloadUrls(queryParser.parse(data).url);
+            //archive.downloadUrls(queryParser.parse(data).url);
             //console.log("ADDED TO LIST: NOW SERVING LOADING.HTML");
             helpers.serveAssets(res,"/loading.html",function(res,contents){
               res.writeHead(302);

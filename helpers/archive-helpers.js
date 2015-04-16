@@ -62,23 +62,24 @@ exports.isURLArchived = function(url, callback){
   });
 };
 
-exports.downloadUrls = function(url){
+exports.downloadUrls = function(){
   exports.readListOfUrls(function(data) {
-    for (var i = 0; i < data.length; i++) {
-      if (url === data[i]) {
-        httpReq.get(url, function(err, res) {
-          if (err) {
-            console.log("Bad news bears: " + err);
-          } else {
-            var filePath = exports.paths.archivedSites + "/" + url;
-            fs.writeFile(filePath, res.buffer.toString(), function(err){
-              if (err) {
-                console.log("call ghost busters: " + err);
-              }
-            })
-          }
-        });
-      }
+    for (var i = 0; i < data.length-1; i++) {
+      console.log("power rangers go " + data[i]);
+      var filePath = exports.paths.archivedSites + "/" + data[i];
+      console.log("outer FILE PATH FOR WRITING: ",filePath);
+      httpReq.get(data[i], function(err, res) {
+        if (err) {
+          console.log("Bad news bears: " + err);
+        } else {
+          console.log("Inner FILE PATH FOR WRITING: ",filePath);
+          fs.writeFile(filePath, res.buffer.toString(), function(err){
+            if (err) {
+              console.log("call ghost busters: " + err);
+            }
+          })
+        }
+      });
     }
-  })
+  });
 };
