@@ -27,6 +27,7 @@ exports.collectData = function(request, callback){
     });
 };
 
+// list of static files to be loaded from public folder
 var publicFiles = {
   '/': 'index.html',
   '/styles.css': 'styles.css',
@@ -34,20 +35,21 @@ var publicFiles = {
 }
 
 exports.serveAssets = function(res, asset, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
 
   var filePath = asset;
 
   if(publicFiles[asset]) {
+    // if the asset called for is in our public folder, serve it
     filePath = archive.paths.siteAssets +"/"+ publicFiles[asset];
   } else {
-      filePath = archive.paths.archivedSites + asset;
-      //console.log("stranger danger ", filePath);
+    // otherwise try to serve the archived site asked for
+    filePath = archive.paths.archivedSites + asset;
   }
 
+  // check if the file exists
   fs.exists(filePath, function(existence){
     if(existence){
+      // if it does, read it and send back the contents to the request handler
       fs.readFile(filePath, function(err, contents){
         if( err ) {
           res.writeHead(500, headers);
@@ -58,6 +60,7 @@ exports.serveAssets = function(res, asset, callback) {
         }
       });
     } else {
+      // otherwise send back a 404 not found
       res.writeHead(404, headers);
       callback(res, "Not Found");
     }

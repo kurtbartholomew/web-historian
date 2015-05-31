@@ -2,32 +2,31 @@ var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var helpers = require('./http-helpers');
 var queryParser = require('querystring');
-// require more modules/folders here!
 
 exports.handleRequest = function (req, res) {
 
   if(req.method === 'GET'){
+    // logs all get requests
     console.log("Attempting to " + req.method + " to " + req.url);
+    // serves assets for get requests and sends back to user
     helpers.serveAssets(res,req.url,function(res,contents){
       res.end(contents);
     });
   } else if (req.method === 'POST'){
-    // NEED TO HANDLE FORM DATA INSTEAD OF URL
+    // Collect info sent via collecting data from packets and sending it back
     helpers.collectData(req, function(data){
-      //console.log("FOUND "+ queryParser.parse(data).url);
+      // call the archive to check if the url being posted has been archived already
       archive.isURLArchived(queryParser.parse(data).url, function(archiveData){
         if (archiveData) {
-          //console.log("ARCHIVED: RETRIEVING", req.url);
+          // if it exists, serve the stored page to the user
           helpers.serveAssets(res,req.url,function(res,contents){
             res.end(contents);
           });
         } else {
-          //console.log("NOT ARCHIVED: ADDING "+ queryParser.parse(data).url +" TO ARCHIVE");
+          // if it hasn't been stored, put the url in the list of sites to be archived
           archive.addUrlToList(queryParser.parse(data).url, function(message,status){
+            // if the url was successfully added, send the user to a loading screen
             res.writeHead(status);
-            //downloadSite(function(){});
-            //archive.downloadUrls(queryParser.parse(data).url);
-            //console.log("ADDED TO LIST: NOW SERVING LOADING.HTML");
             helpers.serveAssets(res,"/loading.html",function(res,contents){
               res.writeHead(302);
               res.end(contents);
